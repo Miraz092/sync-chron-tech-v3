@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens (Figma)
+   ========================================================================== */
+@theme {
+  --color-neutral-400: #99a1af;
+  --color-neutral-600: #4a5565;
+  --color-ink: #1d293d;
+  --color-slate-copy: #62748e;
+  --color-brand-500: #4c48fa;
+  --color-brand-400: #9968fe;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Desktop nav ↔ hamburger switch */
+  --breakpoint-nav: 60.0625rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   Custom utilities
+   ========================================================================== */
+
+/* Figma gradient used by all primary buttons */
+@utility bg-brand-gradient {
+  background: linear-gradient(90deg, #4c48fa -3.41%, #9968fe 100%);
+}
+
+/* Display 56/medium */
+@utility text-display-56 {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 64px;
+  letter-spacing: -1.12px;
+}
+
+/* Hero matches the 1416 × 797 Figma frame, capped to the viewport */
+@utility hero-height {
+  height: max(680px, min(calc(100svh - 24px), calc((100vw - 24px) * 0.5628)));
+
+  @media (width < 48rem) {
+    height: max(720px, calc(100svh - 24px));
+  }
+}
+
+/*
+ * Cards + grass share a "cover" box locked to the Figma aspect ratio, so the
+ * cards always sit on the hill. Parent must have `container-type: size`.
+ * On mobile it sits in the lower ~62% and is anchored right.
+ */
+@utility hero-scene {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: max(100cqw, 177.67cqh);
+  aspect-ratio: 1416 / 797;
+  translate: -50% 0;
+
+  @media (width < 48rem) {
+    left: auto;
+    right: -14cqh;
+    width: 112cqh;
+    translate: none;
+  }
+}
+
+/* Feathered top edge for the bottom blur so it doesn't leave a hard line */
+@utility mask-fade-top {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 45%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 45%);
+}
+
+/* Soft left/right edges for the logo marquee */
+@utility mask-fade-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+/* Button shine sweep on hover (pair with `group`) */
+@utility shine {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white font-sans text-ink;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@keyframes sky-drift {
+  from {
+    transform: scale(1.04) translateX(0);
+  }
+  to {
+    transform: scale(1.08) translateX(-1.5%);
+  }
+}
+
+@utility animate-sky-drift {
+  animation: sky-drift 24s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sky-drift {
+    animation: none;
+  }
+}
