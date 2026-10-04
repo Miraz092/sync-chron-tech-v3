@@ -10,7 +10,7 @@ const geist = Geist({
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["500"],
+  weight: ["500", "600"],
   variable: "--font-bricolage",
   display: "swap",
 });
