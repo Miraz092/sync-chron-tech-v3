@@ -17,7 +17,7 @@ function WorkCard({ project, index }: { project: WorkProject; index: number }) {
     >
       {/* Cover / Image Area (Figma: 408 × 306) */}
       <div
-        className="relative w-full overflow-hidden rounded-t-[18px] rounded-b-[10px]"
+        className="relative w-full overflow-hidden rounded-t-[18px] rounded-b-[10px] cursor-pointer"
         style={{ aspectRatio: "408 / 306" }}
       >
         <Image
@@ -25,7 +25,7 @@ function WorkCard({ project, index }: { project: WorkProject; index: number }) {
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 412px"
-          className="object-cover object-center grayscale transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-105"
+          className="object-cover object-center grayscale transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-[1.08]"
         />
 
         {/* Bottom-up dark gradient overlay (Figma: rgba(18,18,18,0.8) to transparent at 74%) */}
