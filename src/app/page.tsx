@@ -1,6 +1,7 @@
 import Hero from "@/components/hero/Hero";
 import BentoSection from "@/components/stats/BentoSection";
 import ServicesSection from "@/components/services/ServicesSection";
+import WorksSection from "@/components/works/WorksSection";
 
 export default function Home() {
   return (
@@ -8,6 +9,8 @@ export default function Home() {
       <Hero />
       <BentoSection />
       <ServicesSection />
+      <WorksSection />
     </main>
   );
 }
+
