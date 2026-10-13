@@ -1,10 +1,76 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { worksProjects, WorkProject } from "@/data/works";
+import { worksProjects, WorkProject, WorkKPI } from "@/data/works";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+interface WorksSectionProps {
+  projects?: WorkProject[];
+}
+
+function KpiItem({ kpi, kIdx }: { kpi: WorkKPI; kIdx: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [overflowDistance, setOverflowDistance] = useState(0);
+
+  useEffect(() => {
+    const updateOverflow = () => {
+      const container = containerRef.current;
+      const text = textRef.current;
+      if (container && text) {
+        const diff = text.scrollWidth - container.clientWidth;
+        setOverflowDistance(diff > 0 ? diff : 0);
+      }
+    };
+
+    updateOverflow();
+    window.addEventListener("resize", updateOverflow);
+    return () => window.removeEventListener("resize", updateOverflow);
+  }, [kpi.label]);
+
+  const isTruncated = overflowDistance > 0;
+
+  return (
+    <div
+      className={`group/kpi relative flex flex-col justify-center bg-white px-3.5 py-3 h-[72px] rounded-[10px] overflow-hidden ${
+        kIdx === 2
+          ? "rounded-bl-[16px]"
+          : kIdx === 3
+            ? "rounded-br-[16px]"
+            : ""
+      }`}
+    >
+      <span className="font-sans text-[18px] font-semibold leading-[24px] text-[#1E293B] tracking-[-0.02em]">
+        {kpi.value}
+      </span>
+
+      {/* Label container with overflow protection */}
+      <div ref={containerRef} className="relative mt-1 w-full overflow-hidden">
+        <span
+          ref={textRef}
+          style={
+            isTruncated
+              ? ({
+                  "--slide-x": `-${overflowDistance + 4}px`,
+                  transition: "transform 0.85s cubic-bezier(0.22, 1, 0.36, 1)",
+                } as React.CSSProperties)
+              : undefined
+          }
+          className={`font-sans text-[12px] leading-[16px] text-[#64748B] whitespace-nowrap block w-max ${
+            isTruncated
+              ? "group-hover/kpi:[transform:translateX(var(--slide-x))] cursor-default"
+              : ""
+          }`}
+        >
+          {kpi.label}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function WorkCard({ project, index }: { project: WorkProject; index: number }) {
   return (
@@ -50,35 +116,19 @@ function WorkCard({ project, index }: { project: WorkProject; index: number }) {
         </h3>
       </div>
 
-      {/* KPI Metrics — 2×2 grid with 2px gap (Figma: itemSpacing: 2) */}
-      <div className="grid grid-cols-2 gap-[2px]">
+      {/* KPI Metrics — 2×2 grid with Figma spacing and rounded corners */}
+      <div className="grid grid-cols-2 gap-[4px] p-[2px]">
         {project.kpis.map((kpi, kIdx) => (
-          <div
-            key={kIdx}
-            className={`flex flex-col justify-center bg-white p-3 min-h-[68px] ${
-              kIdx === 0
-                ? "rounded-tl-[10px]"
-                : kIdx === 1
-                  ? "rounded-tr-[10px]"
-                  : kIdx === 2
-                    ? "rounded-bl-[18px]"
-                    : "rounded-br-[18px]"
-            }`}
-          >
-            <span className="font-sans text-[16px] font-semibold leading-[24px] text-[#364153]">
-              {kpi.value}
-            </span>
-            <span className="mt-[2px] font-sans text-[12px] leading-[16px] text-[#99A1AF] whitespace-nowrap overflow-hidden text-ellipsis">
-              {kpi.label}
-            </span>
-          </div>
+          <KpiItem key={kIdx} kpi={kpi} kIdx={kIdx} />
         ))}
       </div>
     </motion.div>
   );
 }
 
-export default function WorksSection() {
+export default function WorksSection({ projects = worksProjects }: WorksSectionProps) {
+  const items = projects && projects.length > 0 ? projects : worksProjects;
+
   return (
     <section id="works" className="w-full bg-white py-[120px] max-md:py-16 overflow-hidden">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col gap-20 px-10 max-md:px-5 max-md:gap-12">
@@ -113,7 +163,7 @@ export default function WorksSection() {
           
           {/* Desktop 3×2 Layout (Figma: 1336px frame, 2 rows of 3 cells) */}
           <div className="hidden lg:grid lg:grid-cols-3 border-b border-[#E5E7EB]">
-            {worksProjects.slice(0, 3).map((project, idx) => (
+            {items.slice(0, 3).map((project, idx) => (
               <div
                 key={project.id}
                 className={`p-4 flex items-center justify-center ${
@@ -126,7 +176,7 @@ export default function WorksSection() {
           </div>
 
           <div className="hidden lg:grid lg:grid-cols-3">
-            {worksProjects.slice(3, 6).map((project, idx) => (
+            {items.slice(3, 6).map((project, idx) => (
               <div
                 key={project.id}
                 className={`p-4 flex items-center justify-center ${
@@ -140,7 +190,7 @@ export default function WorksSection() {
 
           {/* Responsive Layout for Tablets & Mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden">
-            {worksProjects.map((project, idx) => (
+            {items.map((project, idx) => (
               <div
                 key={project.id}
                 className={`p-4 flex items-center justify-center border-b last:border-b-0 border-[#E5E7EB] ${
