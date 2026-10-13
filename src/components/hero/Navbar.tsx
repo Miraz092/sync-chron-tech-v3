@@ -152,27 +152,30 @@ export default function Navbar() {
         </ul>
       </nav>
 
-      <BookCallButton id="nav-book-call" className="ml-auto hidden nav:inline-flex" />
+      {/* Actions (Book A Call & Toggle) */}
+      <div className="ml-auto flex items-center gap-3">
+        <BookCallButton id="nav-book-call" className="hidden sm:inline-flex" />
 
-      {/* Mobile toggle */}
-      <button
-        type="button"
-        id="nav-toggle"
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        aria-expanded={mobileOpen}
-        aria-controls="nav-mobile"
-        onClick={() => setMobileOpen((v) => !v)}
-        className="ml-auto inline-flex size-11 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[10px] bg-white/60 backdrop-blur-[10px] nav:hidden"
-      >
-        <motion.span
-          animate={mobileOpen ? { y: 3.75, rotate: 45 } : { y: 0, rotate: 0 }}
-          className="block h-[1.5px] w-[18px] rounded-sm bg-ink"
-        />
-        <motion.span
-          animate={mobileOpen ? { y: -3.75, rotate: -45 } : { y: 0, rotate: 0 }}
-          className="block h-[1.5px] w-[18px] rounded-sm bg-ink"
-        />
-      </button>
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          id="nav-toggle"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="nav-mobile"
+          onClick={() => setMobileOpen((v) => !v)}
+          className="inline-flex size-11 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[10px] bg-white/60 backdrop-blur-[10px] nav:hidden"
+        >
+          <motion.span
+            animate={mobileOpen ? { y: 3.75, rotate: 45 } : { y: 0, rotate: 0 }}
+            className="block h-[1.5px] w-[18px] rounded-sm bg-ink"
+          />
+          <motion.span
+            animate={mobileOpen ? { y: -3.75, rotate: -45 } : { y: 0, rotate: 0 }}
+            className="block h-[1.5px] w-[18px] rounded-sm bg-ink"
+          />
+        </button>
+      </div>
 
       {/* Mobile menu */}
       <AnimatePresence>
