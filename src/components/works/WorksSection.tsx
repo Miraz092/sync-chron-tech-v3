@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { worksProjects, WorkProject, WorkKPI } from "@/data/works";
+import ExploreMoreCard from "./ExploreMoreCard";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -166,7 +167,7 @@ export default function WorksSection({ projects = worksProjects }: WorksSectionP
             {items.slice(0, 3).map((project, idx) => (
               <div
                 key={project.id}
-                className={`p-4 flex items-center justify-center ${
+                className={`p-4 flex items-stretch justify-center ${
                   idx < 2 ? "border-r border-[#E5E7EB]" : ""
                 }`}
               >
@@ -176,30 +177,36 @@ export default function WorksSection({ projects = worksProjects }: WorksSectionP
           </div>
 
           <div className="hidden lg:grid lg:grid-cols-3">
-            {items.slice(3, 6).map((project, idx) => (
+            {items.slice(3, 5).map((project, idx) => (
               <div
                 key={project.id}
-                className={`p-4 flex items-center justify-center ${
-                  idx < 2 ? "border-r border-[#E5E7EB]" : ""
-                }`}
+                className="p-4 flex items-stretch justify-center border-r border-[#E5E7EB]"
               >
                 <WorkCard project={project} index={idx + 3} />
               </div>
             ))}
+            {/* 6th Slot: Interactive Animated Explore More Card */}
+            <div className="p-4 flex items-stretch justify-center">
+              <ExploreMoreCard index={5} />
+            </div>
           </div>
 
           {/* Responsive Layout for Tablets & Mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:hidden">
-            {items.map((project, idx) => (
+            {items.slice(0, 5).map((project, idx) => (
               <div
                 key={project.id}
-                className={`p-4 flex items-center justify-center border-b last:border-b-0 border-[#E5E7EB] ${
+                className={`p-4 flex flex-col items-center justify-center border-b border-[#E5E7EB] ${
                   idx % 2 === 0 ? "md:border-r" : ""
                 }`}
               >
                 <WorkCard project={project} index={idx} />
               </div>
             ))}
+            {/* 6th Slot on Mobile/Tablet */}
+            <div className="p-4 flex flex-col items-center justify-center border-b last:border-b-0 border-[#E5E7EB]">
+              <ExploreMoreCard index={5} />
+            </div>
           </div>
 
         </div>
